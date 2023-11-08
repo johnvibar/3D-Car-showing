@@ -278,11 +278,16 @@ export default function App() {
     <>
       {!isInteriorAnimation && (
         <>
-          {!isInterior && !isAnimation && (
+          {/* {!isInterior && !isAnimation && ( */}
+          {!state.intro && (
             <>
               <button
                 className="btn-interior"
-                onClick={() => interiorView()}
+                onClick={() => {
+                  state.intro = true;
+                  // interiorView();
+                }}
+                // onClick={() => interiorView()}
               ></button>
               <button
                 className={!isDark ? "btn-light" : "btn-light-turned-on"}
@@ -293,10 +298,13 @@ export default function App() {
               </button>
             </>
           )}
-          {isInterior && (
+          {state.intro && (
             <button
               className="btn-outside"
-              onClick={() => interiorView()}
+              onClick={() => {
+                state.intro = false;
+                // interiorView();
+              }}
             ></button>
           )}
         </>
@@ -312,7 +320,7 @@ export default function App() {
         }}
       >
         <Suspense fallback={null}>
-          <Brabus color={snap.color} />
+          <Brabus color={snap.color} open={snap.intro} />
           <Garage />
           <ambientLight intensity={1} />
           <ContactShadows
