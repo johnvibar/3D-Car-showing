@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Canvas } from "@react-three/fiber";
 import {
+  ContactShadows,
   Environment,
   OrbitControls,
   PerspectiveCamera,
-  Preload,
-  Lightformer,
 } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { Brabus } from "./componentForThree/Brabus";
+import { CarLight } from "./componentForThree/Brabus/CarLight";
 import { useState, useRef } from "react";
 import CameraPosition from "./componentForThree/Animation/CameraPosition";
 import gsap from "gsap";
@@ -18,7 +18,6 @@ import Title from "./component/title";
 import Garage from "./componentForThree/Brabus/Garage";
 import { useSnapshot } from "valtio";
 import { state } from "./store";
-import Ground from "./componentForThree/Ground";
 
 export default function App() {
   const cameraRef = useRef();
@@ -26,7 +25,6 @@ export default function App() {
   const [isInterior, setIsInterior] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [isInteriorAnimation, setIsInteriorAnimation] = useState(false);
-
   const orbitControls = useRef();
   // start show interior
   const interiorView = () => {
@@ -280,16 +278,11 @@ export default function App() {
     <>
       {!isInteriorAnimation && (
         <>
-          {/* {!isInterior && !isAnimation && ( */}
-          {!state.intro && (
+          {!isInterior && !isAnimation && (
             <>
               <button
                 className="btn-interior"
-                onClick={() => {
-                  state.intro = true;
-                  // interiorView();
-                }}
-                // onClick={() => interiorView()}
+                onClick={() => interiorView()}
               ></button>
               <button
                 className={!isDark ? "btn-light" : "btn-light-turned-on"}
@@ -300,13 +293,10 @@ export default function App() {
               </button>
             </>
           )}
-          {state.intro && (
+          {isInterior && (
             <button
               className="btn-outside"
-              onClick={() => {
-                state.intro = false;
-                // interiorView();
-              }}
+              onClick={() => interiorView()}
             ></button>
           )}
         </>
@@ -322,10 +312,10 @@ export default function App() {
         }}
       >
         <Suspense fallback={null}>
-          <Brabus color={snap.color} open={snap.intro} />
+          <Brabus color={snap.color} />
           <Garage />
-          <ambientLight intensity={0.7} />
-          {/* <ContactShadows
+          <ambientLight intensity={1} />
+          <ContactShadows
             resolution={1024}
             frames={1}
             position={[0, -1.16, 0]}
@@ -333,7 +323,7 @@ export default function App() {
             blur={0.5}
             opacity={0.7}
             far={20}
-          /> */}
+          />
           <PerspectiveCamera
             ref={cameraRef}
             makeDefault
@@ -342,118 +332,52 @@ export default function App() {
           <OrbitControls
             ref={orbitControls}
             camera={cameraRef.current}
-            autoRotate={true}
-            enablePan={false}
+            autoRotate={false}
+            enablePan={true}
             maxPolarAngle={Math.PI / 2}
             maxDistance={7}
             minDistance={4}
             makeDefault
           />
-          <Ground />
-          <Environment resolution={512}>
-            <Lightformer
-              intensity={0.72}
-              rotation-x={Math.PI / 2}
-              position={[0, 4, -6]}
-              scale={[10, 1, 1]}
-            />
-            <Lightformer
-              intensity={0.72}
-              rotation-x={Math.PI / 2}
-              position={[0, 4, -3]}
-              scale={[10, 1, 1]}
-            />
-            <Lightformer
-              intensity={0.72}
-              rotation-x={Math.PI / 2}
-              position={[0, 4, 0]}
-              scale={[10, 1, 1]}
-            />
-            <Lightformer
-              intensity={0.72}
-              rotation-x={Math.PI / 2}
-              position={[0, 4, 3]}
-              scale={[10, 1, 1]}
-            />
-            <Lightformer
-              intensity={0.72}
-              rotation-x={Math.PI / 2}
-              position={[0, 4, 6]}
-              scale={[10, 1, 1]}
-            />
-            <Lightformer
-              intensity={0.72}
-              rotation-x={Math.PI / 2}
-              position={[0, 4, 9]}
-              scale={[10, 1, 1]}
-            />
-            {/* Sides */}
-            <Lightformer
-              intensity={0.72}
-              rotation-y={Math.PI / 2}
-              position={[-50, 2, 0]}
-              scale={[100, 2, 1]}
-            />
-            <Lightformer
-              intensity={0.72}
-              rotation-y={-Math.PI / 2}
-              position={[50, 2, 0]}
-              scale={[100, 2, 1]}
-            />
-            {/* Key */}
-            <Lightformer
-              form="ring"
-              color="red"
-              intensity={10}
-              scale={2}
-              position={[10, 5, 10]}
-              onUpdate={(self) => self.lookAt(0, 0, 0)}
-            />
-          </Environment>
-
-          {/* <Environment preset="night" resolution={0} /> */}
-          {/* {isDark ? (
+          {isDark ? (
             <>
               <color attach="background" args={["#000000"]} />
-              <ambientLight intensity={-10} />
             </>
           ) : (
             <>
               <color attach="background" args={["#FFFFFF"]} />
               <Environment files="/textures/env.hdr" resolution={0} />
             </>
-          )} */}
-          {/* {isDark && (
+          )}
+          {isDark && (
             <>
               <CarLight position={[-2.183, -0.255, 0.606]} />
               <CarLight position={[-1.544, -0.256, 1.655]} />
             </>
-          )} */}
-
+          )}
           <EffectComposer disableNormalPass>
             <Bloom
-              luminanceThreshold={2.1}
+              luminanceThreshold={10}
               mipmapBlur
               luminanceSmoothing={0.4}
-              intensity={4}
+              intensity={0.2}
             />
           </EffectComposer>
         </Suspense>
         <CameraPosition />
-        <Preload all />
       </Canvas>
       <div className="parentBtn">
         <button
           className="colorBtn bg-red"
-          onClick={() => (state.color = "#300202")}
+          onClick={() => (state.color = "#FB6F6F")}
         />
         <button
           className="colorBtn bg-white"
-          onClick={() => (state.color = "#150129")}
+          onClick={() => (state.color = "#FFFFFF")}
         />
         <button
           className="colorBtn bg-black"
-          onClick={() => (state.color = "#2D2C2C")}
+          onClick={() => (state.color = "#494646")}
         />
       </div>
       <Title />
