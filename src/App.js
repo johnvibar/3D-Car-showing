@@ -322,7 +322,7 @@ export default function App() {
         <Suspense fallback={null}>
           <Brabus color={snap.color} open={snap.intro} />
           <Garage />
-          <ambientLight intensity={1} />
+          <ambientLight intensity={0.1} />
           <ContactShadows
             resolution={1024}
             frames={1}
@@ -340,8 +340,8 @@ export default function App() {
           <OrbitControls
             ref={orbitControls}
             camera={cameraRef.current}
-            autoRotate={false}
-            enablePan={true}
+            autoRotate={true}
+            enablePan={false}
             maxPolarAngle={Math.PI / 2}
             maxDistance={7}
             minDistance={4}
@@ -377,15 +377,15 @@ export default function App() {
       <div className="parentBtn">
         <button
           className="colorBtn bg-red"
-          onClick={() => (state.color = "#FB6F6F")}
+          onClick={() => (state.color = "#300202")}
         />
         <button
           className="colorBtn bg-white"
-          onClick={() => (state.color = "#FFFFFF")}
+          onClick={() => (state.color = "#150129")}
         />
         <button
           className="colorBtn bg-black"
-          onClick={() => (state.color = "#494646")}
+          onClick={() => (state.color = "#2D2C2C")}
         />
       </div>
       <Title />

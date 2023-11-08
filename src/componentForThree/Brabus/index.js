@@ -15,6 +15,7 @@ export function Brabus(props) {
     applyProps(materials.black_main_metal, {
       metalness: 0.9,
       roughness: 0.02,
+      clearcoat: 1,
       color: props.color,
     });
     applyProps(materials.black_body_plastic, {
@@ -47,8 +48,8 @@ export function Brabus(props) {
     applyProps(materials.main_glass, {
       metalness: 0.6,
       roughness: 0.2,
-      opacity: 0.1,
-      color: "#ffffff",
+      opacity: 0.6,
+      color: "#070707",
     });
     applyProps(materials.sunroof, {
       metalness: 1,
@@ -133,7 +134,7 @@ export function Brabus(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.open]);
   return (
-    <group ref={ref} onClick={() => closeDoor()}>
+    <group ref={ref}>
       <primitive
         object={scene}
         rotation={[0, Math.PI / 1.5, 0]}
