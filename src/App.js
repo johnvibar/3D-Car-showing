@@ -1,17 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Canvas } from "@react-three/fiber";
 import {
-  ContactShadows,
   Environment,
   OrbitControls,
   PerspectiveCamera,
-  Grid,
-  Text,
   Preload,
+  Lightformer,
 } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { Brabus } from "./componentForThree/Brabus";
-import { CarLight } from "./componentForThree/Brabus/CarLight";
 import { useState, useRef } from "react";
 import CameraPosition from "./componentForThree/Animation/CameraPosition";
 import gsap from "gsap";
@@ -21,6 +18,7 @@ import Title from "./component/title";
 import Garage from "./componentForThree/Brabus/Garage";
 import { useSnapshot } from "valtio";
 import { state } from "./store";
+import Ground from "./componentForThree/Ground";
 
 export default function App() {
   const cameraRef = useRef();
@@ -28,6 +26,7 @@ export default function App() {
   const [isInterior, setIsInterior] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [isInteriorAnimation, setIsInteriorAnimation] = useState(false);
+
   const orbitControls = useRef();
   // start show interior
   const interiorView = () => {
@@ -324,9 +323,9 @@ export default function App() {
       >
         <Suspense fallback={null}>
           <Brabus color={snap.color} open={snap.intro} />
-          {/* <Garage /> */}
-          <ambientLight intensity={0.1} />
-          <ContactShadows
+          <Garage />
+          <ambientLight intensity={0.7} />
+          {/* <ContactShadows
             resolution={1024}
             frames={1}
             position={[0, -1.16, 0]}
@@ -334,7 +333,7 @@ export default function App() {
             blur={0.5}
             opacity={0.7}
             far={20}
-          />
+          /> */}
           <PerspectiveCamera
             ref={cameraRef}
             makeDefault
@@ -350,21 +349,70 @@ export default function App() {
             minDistance={4}
             makeDefault
           />
-          <Grid
-            renderOrder={-1}
-            position={[0, -0.9, 0]}
-            infiniteGrid
-            cellSize={0.6}
-            cellThickness={0.6}
-            sectionSize={1.2}
-            sectionThickness={1.5}
-            sectionColor={[0.5, 0.5, 2]}
-            fadeDistance={30}
-            fadeStrength={7}
-          />
+          <Ground />
+          <Environment resolution={512}>
+            <Lightformer
+              intensity={0.72}
+              rotation-x={Math.PI / 2}
+              position={[0, 4, -6]}
+              scale={[10, 1, 1]}
+            />
+            <Lightformer
+              intensity={0.72}
+              rotation-x={Math.PI / 2}
+              position={[0, 4, -3]}
+              scale={[10, 1, 1]}
+            />
+            <Lightformer
+              intensity={0.72}
+              rotation-x={Math.PI / 2}
+              position={[0, 4, 0]}
+              scale={[10, 1, 1]}
+            />
+            <Lightformer
+              intensity={0.72}
+              rotation-x={Math.PI / 2}
+              position={[0, 4, 3]}
+              scale={[10, 1, 1]}
+            />
+            <Lightformer
+              intensity={0.72}
+              rotation-x={Math.PI / 2}
+              position={[0, 4, 6]}
+              scale={[10, 1, 1]}
+            />
+            <Lightformer
+              intensity={0.72}
+              rotation-x={Math.PI / 2}
+              position={[0, 4, 9]}
+              scale={[10, 1, 1]}
+            />
+            {/* Sides */}
+            <Lightformer
+              intensity={0.72}
+              rotation-y={Math.PI / 2}
+              position={[-50, 2, 0]}
+              scale={[100, 2, 1]}
+            />
+            <Lightformer
+              intensity={0.72}
+              rotation-y={-Math.PI / 2}
+              position={[50, 2, 0]}
+              scale={[100, 2, 1]}
+            />
+            {/* Key */}
+            <Lightformer
+              form="ring"
+              color="red"
+              intensity={10}
+              scale={2}
+              position={[10, 5, 10]}
+              onUpdate={(self) => self.lookAt(0, 0, 0)}
+            />
+          </Environment>
 
-          <Environment preset="night" resolution={0} />
-          {isDark ? (
+          {/* <Environment preset="night" resolution={0} /> */}
+          {/* {isDark ? (
             <>
               <color attach="background" args={["#000000"]} />
               <ambientLight intensity={-10} />
@@ -374,71 +422,24 @@ export default function App() {
               <color attach="background" args={["#FFFFFF"]} />
               <Environment files="/textures/env.hdr" resolution={0} />
             </>
-          )}
-          {isDark && (
+          )} */}
+          {/* {isDark && (
             <>
               <CarLight position={[-2.183, -0.255, 0.606]} />
               <CarLight position={[-1.544, -0.256, 1.655]} />
             </>
-          )}
+          )} */}
+
           <EffectComposer disableNormalPass>
             <Bloom
-              luminanceThreshold={10}
+              luminanceThreshold={2.1}
               mipmapBlur
               luminanceSmoothing={0.4}
-              intensity={0.2}
+              intensity={4}
             />
           </EffectComposer>
         </Suspense>
         <CameraPosition />
-        <Text
-          color="#AEACAC"
-          scale={0.2}
-          position={[-2.7, -1, 1]}
-          rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
-        >
-          G-CLASS W 463A AMG G 63
-        </Text>
-        <Text
-          color="#AEACAC"
-          scale={0.2}
-          position={[1, -1, 3]}
-          rotation={[-Math.PI / 2, 0, 0]}
-        >
-          SMART DESIGN
-        </Text>
-        <Text
-          color="#868585"
-          scale={0.3}
-          position={[-0, -1, -3]}
-          rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
-        >
-          EXHAUST SYSTEMS:
-        </Text>
-        <Text
-          color="#AEACAC"
-          scale={0.15}
-          position={[-0.5, -1, -3.17]}
-          rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
-        >
-          BOOSTXTRA - BLOW OFF ADAPTER
-        </Text>
-        <Text
-          color="#AEACAC"
-          scale={0.15}
-          position={[-0.8, -1, -3.25]}
-          rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
-        >
-          SPORT EXHAUST SYSTEM WITH
-        </Text>
-        <Text
-          color="#AEACAC"
-          scale={0.15}
-          position={[-1, -1, -3.27]}
-          rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
-        >
-          ACTIVELY CONTROLLED FLAPS
-        </Text>
         <Preload all />
       </Canvas>
       <div className="parentBtn">

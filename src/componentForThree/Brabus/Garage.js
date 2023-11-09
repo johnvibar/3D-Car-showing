@@ -12,5 +12,5 @@ export default function Garage() {
   //     clearcoat: 0,
   //   });
   // }, []);
-  return <primitive object={scene} scale={0.5} position={[0, 1, 0]} />;
+  return <primitive object={scene} scale={0.5} position={[0, 5.8, 0]} />;
 }
