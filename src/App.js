@@ -5,6 +5,9 @@ import {
   Environment,
   OrbitControls,
   PerspectiveCamera,
+  Grid,
+  Text,
+  Preload,
 } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { Brabus } from "./componentForThree/Brabus";
@@ -321,7 +324,7 @@ export default function App() {
       >
         <Suspense fallback={null}>
           <Brabus color={snap.color} open={snap.intro} />
-          <Garage />
+          {/* <Garage /> */}
           <ambientLight intensity={0.1} />
           <ContactShadows
             resolution={1024}
@@ -347,9 +350,24 @@ export default function App() {
             minDistance={4}
             makeDefault
           />
+          <Grid
+            renderOrder={-1}
+            position={[0, -0.9, 0]}
+            infiniteGrid
+            cellSize={0.6}
+            cellThickness={0.6}
+            sectionSize={1.2}
+            sectionThickness={1.5}
+            sectionColor={[0.5, 0.5, 2]}
+            fadeDistance={30}
+            fadeStrength={7}
+          />
+
+          <Environment preset="night" resolution={0} />
           {isDark ? (
             <>
               <color attach="background" args={["#000000"]} />
+              <ambientLight intensity={-10} />
             </>
           ) : (
             <>
@@ -373,6 +391,55 @@ export default function App() {
           </EffectComposer>
         </Suspense>
         <CameraPosition />
+        <Text
+          color="#AEACAC"
+          scale={0.2}
+          position={[-2.7, -1, 1]}
+          rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
+        >
+          G-CLASS W 463A AMG G 63
+        </Text>
+        <Text
+          color="#AEACAC"
+          scale={0.2}
+          position={[1, -1, 3]}
+          rotation={[-Math.PI / 2, 0, 0]}
+        >
+          SMART DESIGN
+        </Text>
+        <Text
+          color="#868585"
+          scale={0.3}
+          position={[-0, -1, -3]}
+          rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
+        >
+          EXHAUST SYSTEMS:
+        </Text>
+        <Text
+          color="#AEACAC"
+          scale={0.15}
+          position={[-0.5, -1, -3.17]}
+          rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
+        >
+          BOOSTXTRA - BLOW OFF ADAPTER
+        </Text>
+        <Text
+          color="#AEACAC"
+          scale={0.15}
+          position={[-0.8, -1, -3.25]}
+          rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
+        >
+          SPORT EXHAUST SYSTEM WITH
+        </Text>
+        <Text
+          color="#AEACAC"
+          scale={0.15}
+          position={[-1, -1, -3.27]}
+          rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
+        >
+          ACTIVELY CONTROLLED FLAPS
+        </Text>
+        <Preload all />
       </Canvas>
       <div className="parentBtn">
         <button
